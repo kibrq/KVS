@@ -11,7 +11,7 @@
 	\item Значение помещается в один блок и может быть считано и записано одной элементарной операцией чтения/записи
 	
 \end{enumerate}
-
+\newpage
 \subsection*{Обозначения}
 
 (const) $N$ -- количество различных ключей, на хранение которых рассчитано хранилище. (100000)
@@ -28,21 +28,23 @@
 
 (variable) $L$ -- максимальное количество записей, единовременно лежащее в Log
 
-(variable) $\nu_L$ -- частота бэкапа
-
 (const) $S_h$ -- размер хэша, распределяющего ключи по блокам (в байтах) ($\sim\lceil\frac{\log_2 \frac{N}{b}}{8}\rceil = 2\ \operatorname{or}\ 3$)
 
 (const) $S_o$ -- размер указателя на позицию в файле (в байтах) ($ \lceil\log_2N\rceil = \frac{17}{8}$)
 
 (const) $b$ -- количество пар ключ-указатель, помещающееся в один блок диска ($\lceil\frac{block\ size}{S_k + S_o}\rceil = 225$)
 
+(variable) $k$ -- количество операций между сбрасыванием лога на диск
+
 \subsection*{Метрики}
 
-\large$WA = \frac{S_v + \frac{1}{L}\cdot(\frac{N}{b}\cdot (block\ size))}{S_v + S_k}$\normalsize
+\large$WA = 1 + \frac{1}{L}\cdot\frac{N}{b} + \frac{1}{k}$\normalsize
 
-$S_v$ -- запись файла
+$1$ -- запись файла
 
-$\frac{N}{b}\cdot (block\ size)$ -- размер индекса, который перезаписывается каждые $L$ записей\\
+$\frac{N}{b}$ -- размер индекса, который перезаписывается каждые $L$ записей
+
+$\frac{1}{k}$ -- траты на сброс лога на диск (с учётом того, что он помещается в один блок памяти)
 
 \large$RA = \frac{L + 2(N-L)}{N} = 2 - \frac{L}{N}$\normalsize
 
@@ -64,11 +66,13 @@ $\frac{N}{b}\cdot (block\ size)$ -- размер индекса, который 
 
 $WA\downarrow\downarrow\downarrow\ \ RA \downarrow\ \ MO \uparrow\uparrow\uparrow$
 
+Есть ещё условно переменная величина -- частота сброса лога на диск, но она влияет только на $WA$ и, допустим, заказчик сказал, что не хочет терять больше 10 записей, а значит $k = 10$
+
 \subsection*{Оптимум}
 
 Подставим конкретные значения из условия:
 
-\large$WA = \frac{2048 + \frac{1}{L}\cdot(\frac{N}{225}\cdot 4096)}{2064} = 0.99 + 0.00882\frac{N}{L}$\normalsize
+\large$WA = 1 + \frac{444}{L} + \frac{1}{10} = 1.1 + \frac{444}{L}$\normalsize
 
 \large$RA = \frac{L + 2(10^5-L)}{10^5} = 2 - \frac{L}{10^5}$\normalsize
 
@@ -80,7 +84,7 @@ $WA\downarrow\downarrow\downarrow\ \ RA \downarrow\ \ MO \uparrow\uparrow\uparro
 
 Итого:
 
-\large$WA = 1.43$\normalsize
+\large$WA = 1.32$\normalsize
 
 \large$RA = 1.98$\normalsize
 
@@ -88,4 +92,8 @@ $WA\downarrow\downarrow\downarrow\ \ RA \downarrow\ \ MO \uparrow\uparrow\uparro
 
 \large$MO = 0.5$\normalsize
 
-\large$T = 5.8$\normalsize лет
+\large$T = 6.3\ $\normalsize года
+
+\section*{Дополнение}
+
+Так как у нас MO получилось сильно ниже, чем разрешено по условию задачи, то оставшейся памяти хватит на добавление фильтра Блюма перед вторым уровнем. Поэтому, если хранилище получилось слишком простым, то мы готовы добавить его.
