@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.15)
 
 set(CMAKE_CXX_COMPILER g++-10)
 
@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pipe")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconcepts-diagnostics-depth=3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wduplicated-branches -Wduplicated-cond -Wfloat-equal -Wconversion")
 
@@ -20,4 +21,15 @@ add_subdirectory(benchmark)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
 
-add_executable(KVS src/Main.cpp include/KVSInterface.hpp include/KeyValue.hpp src/KeyValue.cpp include/KeyValueStore.hpp)
+add_executable(KVS
+        src/Main.cpp
+        src/RepositoryFactory.cpp
+        src/Repository.cpp
+        include/KeyValue.hpp
+        include/KeyValueStore.hpp
+        include/RepositoryFactory.hpp
+        include/Repository.hpp
+        include/Serializer.hpp
+        include/SerializerSized.hpp
+        include/TypedRepository.hpp
+        include/ValueSerializer.hpp)
