@@ -25,7 +25,7 @@ public:
         Id id;
     };
 
-    explicit TableBlock(std::vector<Entry> entries) : size{entries.size()} {
+    explicit TableBlock(const std::vector<Entry> &entries) : size{entries.size()} {
         assert(size <= max_size);
         for (size_t i = 0; i < size; ++i) {
             KeyArray::set(keyArray(), entries[i].key, i);
@@ -36,7 +36,7 @@ public:
         }
     }
 
-    std::optional<Id> get(Key<key_size> key) {
+    std::optional<Id> get(const Key<key_size> &key) {
         for (size_t i = 0; i < size; ++i) {
             if (KeyArray::get(keyArray(), i) == key) {
                 return IdArray::get(idArray(), i);
@@ -58,8 +58,7 @@ public:
 
 private:
     explicit TableBlock(std::unique_ptr<char[]> data) : size{0}, data{std::move(data)} {
-        while (size <= max_size && IdArray::get(idArray(), size) != reserved_id) ++size;
-        --size;
+        while (size < max_size && IdArray::get(idArray(), size) != reserved_id) ++size;
     }
 
     static constexpr size_t idArrayOffset = max_size * KeyArray::bit_per_value / 8;

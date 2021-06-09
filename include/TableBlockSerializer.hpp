@@ -14,6 +14,6 @@ public:
     }
 
     static const char* view(const TBlock &block) {
-        return block.data;
+        return block.data.get();
     }
 };
