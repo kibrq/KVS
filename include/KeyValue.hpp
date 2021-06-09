@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include <cstddef>
 #include <memory>
 
@@ -14,6 +15,10 @@ public:
 
     [[nodiscard]] consteval size_t getSize() const {
         return size;
+    }
+
+    bool operator==(const Key<size> &other) const {
+        return strncmp(key.get(), other.key.get(), size) == 0;
     }
 
 private:
@@ -31,6 +36,10 @@ public:
 
     [[nodiscard]] consteval size_t getSize() const {
         return size;
+    }
+
+    bool operator==(const Value<size> &other) const {
+        return strncmp(value.get(), other.value.get(), size) == 0;
     }
 
 private:
