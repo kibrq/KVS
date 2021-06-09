@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 template<size_t bits>
 class LimitedUnsignedInt {
 public:

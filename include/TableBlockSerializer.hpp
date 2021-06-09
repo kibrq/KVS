@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstring>
-
-#include "KeyValue.hpp"
 #include "Serializer.hpp"
 #include "TableBlock.hpp"
 
@@ -12,11 +9,11 @@ class Serializer<TableBlock<block_size, id_bits, key_size>> {
 public:
     static constexpr size_t value_size = block_size;
 
-    static TBlock read(char *data) {
-        return TBlock{data};
+    static TBlock consume(std::unique_ptr<char[]> data) {
+        return TBlock{std::move(data)};
     }
 
-    static void write(TBlock block, char *dst) {
-        memcpy(dst, block.data, block_size);
+    static const char* view(const TBlock &block) {
+        return block.data;
     }
 };

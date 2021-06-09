@@ -1,14 +1,15 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 
 template<size_t size>
 class Key {
 public:
-    explicit Key(const char *key) : key{key} {}
+    explicit Key(std::unique_ptr<char[]> key) : key{std::move(key)} {}
 
     [[nodiscard]] const char *getKey() const {
-        return key;
+        return key.get();
     }
 
     [[nodiscard]] consteval size_t getSize() const {
@@ -16,16 +17,16 @@ public:
     }
 
 private:
-    const char *key;
+    std::unique_ptr<char[]> key;
 };
 
 template<size_t size>
 class Value {
 public:
-    explicit Value(const char *value) : value{value} {}
+    explicit Value(std::unique_ptr<char[]> value) : value{std::move(value)} {}
 
     [[nodiscard]] const char *getValue() const {
-        return value;
+        return value.get();
     }
 
     [[nodiscard]] consteval size_t getSize() const {
@@ -33,7 +34,7 @@ public:
     }
 
 private:
-    const char *value;
+    std::unique_ptr<char[]> value;
 };
 
 

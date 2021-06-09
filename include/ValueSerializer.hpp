@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstring>
+#include <memory>
 
 #include "KeyValue.hpp"
 #include "Serializer.hpp"
@@ -10,11 +11,11 @@ class Serializer<Value<size>> {
 public:
     static constexpr size_t value_size = size;
 
-    static Value<size> read(const char *data) {
-        return Value<size>{data};
+    static Value<size> consume(std::unique_ptr<char[]> data) {
+        return Value<size>{std::move(data)};
     }
 
-    static void write(Value<size> value, char *dst) {
-        memcpy(dst, value.getValue(), size);
+    static const char *view(const Value<size> &value) {
+        return value.getValue();
     }
 };

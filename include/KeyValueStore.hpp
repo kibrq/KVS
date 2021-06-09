@@ -2,6 +2,8 @@
 
 #include <optional>
 
+#include "KeyValue.hpp"
+
 template<size_t key_size, size_t value_size>
 class KeyValueStore {
 public:

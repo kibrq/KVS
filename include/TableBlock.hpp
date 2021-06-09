@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sys/user.h>
+#include <cstddef>
 #include <cassert>
 #include <optional>
 
@@ -57,7 +57,7 @@ public:
     friend class Serializer<TableBlock<block_size, id_bits, key_size>>;
 
 private:
-    explicit TableBlock(char *data) : size{0}, data{data} {
+    explicit TableBlock(std::unique_ptr<char[]> data) : size{0}, data{std::move(data)} {
         while (size <= max_size && IdArray::get(idArray(), size) != reserved_id) ++size;
         --size;
     }
@@ -65,13 +65,13 @@ private:
     static constexpr size_t idArrayOffset = max_size * KeyArray::bit_per_value / 8;
 
     [[nodiscard]] inline char *idArray() const {
-        return data + idArrayOffset;
+        return data.get() + idArrayOffset;
     }
 
     [[nodiscard]] inline char *keyArray() const {
-        return data;
+        return data.get();
     }
 
     size_t size;
-    char *data = new char[block_size];
+    std::unique_ptr<char[]> data = std::make_unique<char[]>(block_size);
 };

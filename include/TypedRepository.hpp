@@ -1,26 +1,28 @@
 #pragma once
 
+#include <cstddef>
+#include <memory>
+
 #include "SerializerSized.hpp"
 #include "Repository.hpp"
 
 template<SerializedSized T>
 class TypedRepository {
 private:
-    static inline constexpr size_t size = Serializer<T>::value_size;
+    static constexpr size_t size = Serializer<T>::value_size;
     Repository repository;
 public:
     explicit TypedRepository(Repository &&repository) : repository{std::move(repository)} {}
 
     T read(size_t index) {
-        char tmp[size];
-        repository.read(index * size, tmp, size);
-        return Serializer<T>::read(tmp);
+        std::unique_ptr<char[]> data = std::make_unique<char[]>(size);
+        repository.read(index * size, data.get(), size);
+        return Serializer<T>::consume(std::move(data));
     }
 
-    void write(size_t index, T value) {
-        char tmp[size];
-        Serializer<T>::write(value, tmp);
-        repository.write(index * size, tmp, size);
+    void write(size_t index, const T &value) {
+        const char *serializedView = Serializer<T>::view(value);
+        repository.write(index * size, serializedView, size);
     }
 
     void close() {

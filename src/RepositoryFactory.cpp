@@ -1,5 +1,6 @@
+#include <filesystem>
+
 #include "RepositoryFactory.hpp"
-#include <string>
 
 RepositoryFactory::RepositoryFactory(std::filesystem::path base_path) : base_path{std::move(base_path)} {}
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "LazyUnalignedArray.hpp"
 #include "LimitedUnsignedInt.hpp"
 
