@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pipe")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconcepts-diagnostics-depth=3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wduplicated-branches -Wduplicated-cond -Wfloat-equal -Wconversion")
 
@@ -32,4 +31,10 @@ add_executable(KVS
         include/Serializer.hpp
         include/SerializerSized.hpp
         include/TypedRepository.hpp
-        include/ValueSerializer.hpp)
+        include/ValueSerializer.hpp
+        include/LazyUnalignedArray.hpp
+        include/LazyUnalignedKeyArray.hpp
+        include/LazyUnalignedIntArray.hpp
+        include/LimitedUnsignedInt.hpp
+        include/TableBlock.hpp
+        include/TableBlockSerializer.hpp)
