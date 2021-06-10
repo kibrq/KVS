@@ -37,4 +37,6 @@ add_executable(KVS
         include/LazyUnalignedIntArray.hpp
         include/LimitedUnsignedInt.hpp
         include/TableBlock.hpp
-        include/TableBlockSerializer.hpp)
+        include/TableBlockSerializer.hpp
+        include/Storage.hpp
+        include/FreePositionsManager.hpp)

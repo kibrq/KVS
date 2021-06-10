@@ -6,7 +6,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak -fsanitize=address -fsan
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
-add_executable(KVSTest testAll.cpp testTypedRepository.cpp ../src/Repository.cpp ../src/RepositoryFactory.cpp)
+add_executable(KVSTest
+        ../src/Repository.cpp ../src/RepositoryFactory.cpp
+        testAll.cpp
+        TestUtils.hpp TestUtilsImpl.hpp
+        testTypedRepository.cpp testFreePositionsManager.cpp testStorage.cpp)
 
 include_directories(${GTEST_INCLUDE_DIRS})
 
