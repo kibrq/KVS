@@ -3,8 +3,9 @@
 #include <cstddef>
 #include <memory>
 #include <string>
-#include <RepositoryFactory.hpp>
 
+#include "TypedRepository.hpp"
+#include "RepositoryFactory.hpp"
 #include "KeyValue.hpp"
 #include "TableBlock.hpp"
 #include "SerializerSized.hpp"

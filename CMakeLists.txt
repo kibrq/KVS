@@ -39,4 +39,7 @@ add_executable(KVS
         include/TableBlock.hpp
         include/TableBlockSerializer.hpp
         include/Storage.hpp
-        include/FreePositionsManager.hpp)
+        include/FreePositionsManager.hpp
+        include/Log.hpp
+        include/KeyAction.hpp
+        include/SearchResult.hpp)

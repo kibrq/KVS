@@ -4,6 +4,7 @@
 #include <cassert>
 #include <optional>
 
+#include "Serializer.hpp"
 #include "KeyValue.hpp"
 #include "LimitedUnsignedInt.hpp"
 #include "LazyUnalignedIntArray.hpp"
