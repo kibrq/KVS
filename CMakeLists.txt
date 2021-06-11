@@ -42,4 +42,5 @@ add_executable(KVS
         include/FreePositionsManager.hpp
         include/Log.hpp
         include/KeyAction.hpp
-        include/SearchResult.hpp)
+        include/SearchResult.hpp
+        include/index/Index.hpp include/index/Filter.hpp include/index/IndexImpl.hpp include/TypedRepositoryFactory.hpp include/index/EntryIteratorImpl.hpp)
