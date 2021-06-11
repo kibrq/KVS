@@ -105,3 +105,30 @@ TEST(TestIndex, APPLY_WITH_NON_EMPTY) {
     check_optional_present<unsigned int>(index.get(key4), 11);
     check_optional_present<unsigned int>(index.get(key2), 2);
 }
+
+TEST(TestIndex, APPLY_WITH_LITTLE_BLOCK_SIZE) {
+    constexpr std::size_t key_size = 4;
+    constexpr std::size_t hash_size = 3;
+    constexpr std::size_t block_size = 16;
+    constexpr std::size_t id_bits = 8;
+
+    StubFilter<key_size> filter;
+    TypedRepositoryFactory<TableBlock<block_size, id_bits, key_size>> factory(RepositoryFactory("."));
+
+    Index<key_size, hash_size, block_size, id_bits> index(filter, factory);
+
+    Log<200, key_size, id_bits> log{};
+    std::vector<Key<key_size>> keys;
+    for (int i = 0; i < 100; ++i) {
+        keys.push_back(createKey<key_size>(std::to_string(i) + "aaa"));
+        log.add(keys.back(), i);
+    }
+
+    index.apply(log.summarize());
+
+    for (int i = 0; i < 100; ++i) {
+        check_optional_present<unsigned int>(index.get(keys[i]), i);
+    }
+    check_optional_not_present<unsigned int>(index.get(createKey<key_size>("abcd")));
+
+}
