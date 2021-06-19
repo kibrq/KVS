@@ -16,6 +16,9 @@ Value<size> createValue(const std::string &value);
 template<size_t size>
 Key<size> createKey(const std::string &value);
 
+template <std::size_t size>
+std::string createRandomKey();
+
 template<SerializedSized T>
 TypedRepository<T> createTypedRepository();
 
