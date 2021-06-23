@@ -11,7 +11,7 @@ add_executable(KVSTest
         testAll.cpp
         TestUtils.hpp TestUtilsImpl.hpp
         testLazyUnalignedIntArray.cpp
-        testTypedRepository.cpp testFreePositionsManager.cpp testStorage.cpp testLog.cpp testIndex.cpp StubFilter.hpp testBloomFilter.cpp )
+        testTypedRepository.cpp testFreePositionsManager.cpp testStorage.cpp testLog.cpp testIndex.cpp StubFilter.hpp testBloomFilter.cpp testE2E.cpp)
 
 include_directories(${GTEST_INCLUDE_DIRS})
 

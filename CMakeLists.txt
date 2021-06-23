@@ -43,4 +43,4 @@ add_executable(KVS
         include/Log.hpp
         include/KeyAction.hpp
         include/SearchResult.hpp
-        include/index/Index.hpp include/index/Filter.hpp include/index/IndexImpl.hpp include/TypedRepositoryFactory.hpp include/index/EntryIteratorImpl.hpp include/index/BloomFilter.hpp include/index/BloomFilterImpl.hpp lib/xxhash.h include/util/XXHashWrapper.hpp include/util/XXHashWrapperImpl.hpp)
+        include/index/Index.hpp include/index/Filter.hpp include/index/IndexImpl.hpp include/TypedRepositoryFactory.hpp include/index/EntryIteratorImpl.hpp include/index/BloomFilter.hpp include/index/BloomFilterImpl.hpp lib/xxhash.h include/util/XXHashWrapper.hpp include/util/XXHashWrapperImpl.hpp include/KeyValueStoreImpl.hpp)
