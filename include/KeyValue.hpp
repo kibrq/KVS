@@ -46,19 +46,20 @@ private:
     std::unique_ptr<char[]> value;
 };
 
+#include "ValueSerializer.hpp"
 
 template<size_t key_size, size_t value_size>
 class KeyValue {
 public:
     KeyValue(const char *key, const char *value) : key{key}, value{value} {}
 
-    KeyValue(Key<key_size> key, Value<value_size> value) : key{key}, value{value} {}
+    KeyValue(Key<key_size>&& key, Value<value_size>&& value) : key{std::move(key)}, value{std::move(value)} {}
 
-    [[nodiscard]] Key<key_size> getKey() const {
+    [[nodiscard]] const Key<key_size>& getKey() const {
         return key;
     }
 
-    [[nodiscard]] Value<value_size> getValue() const {
+    [[nodiscard]] const Value<value_size>& getValue() const {
         return value;
     }
 
@@ -66,3 +67,4 @@ private:
     Key<key_size> key;
     Value<value_size> value;
 };
+

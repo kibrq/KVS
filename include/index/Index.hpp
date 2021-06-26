@@ -2,9 +2,11 @@
 
 #include <cstddef>
 #include <iterator>
+#include <memory>
 #include <optional>
 
 #include "KeyValue.hpp"
+#include "Filter.hpp"
 #include "TypedRepositoryFactory.hpp"
 #include "TypedRepository.hpp"
 #include "LimitedUnsignedInt.hpp"
@@ -20,16 +22,15 @@ private:
     using Id = typename IdType::PlainType;
 
 private:
-    Filter<key_size> &filter_m;
-
-    TypedRepositoryFactory<TBlock> &factory_m;
+    std::unique_ptr<Filter<key_size>> filter_m;
+    std::unique_ptr<TypedRepositoryFactory<TBlock>> factory_m;
 
     TypedRepository<TBlock> repository_m;
     std::vector<Hash> sparse_table_m;
 
 public:
     // Assumes that repository is empty
-    Index(Filter<key_size> &, TypedRepositoryFactory<TBlock> &);
+    Index(std::unique_ptr<Filter<key_size>>&&, std::unique_ptr<TypedRepositoryFactory<TBlock>> &&);
 
     std::optional<Id> get(const Key<key_size> &key);
 
@@ -41,7 +42,7 @@ private:
     bool compare_keys_by_hash(const Key<key_size> &, const Key<key_size> &);
 
     struct EntryIterator : std::iterator<std::input_iterator_tag, typename TBlock::Entry> {
-        explicit EntryIterator(Index& index, std::size_t block_index, std::size_t in_block);
+        explicit EntryIterator(Index &index, std::size_t block_index, std::size_t in_block);
 
         EntryIterator &operator++();
 
@@ -56,7 +57,7 @@ private:
     private:
         void load_block();
 
-        Index& index_m;
+        Index &index_m;
         std::size_t block_index_m, in_block_m;
         std::vector<typename TBlock::Entry> current_block_m;
     };

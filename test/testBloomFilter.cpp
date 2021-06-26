@@ -40,13 +40,13 @@ TEST(TestBloomFilter, CollisionRate) {
         std::unordered_set<std::string> set;
 
         for (std::size_t i = 0; i < elements_count; ++i) {
-            std::string s = createRandomKey<key_size>();
+            std::string s = createRandomString<key_size>();
             set.insert(s), filter.add(createKey<key_size>(s));
         }
 
         std::size_t mistakes = 0;
         for (std::size_t i = 0; i < iterations; ++i) {
-            std::string s = createRandomKey<key_size>();
+            std::string s = createRandomString<key_size>();
             mistakes += !set.contains(s) && !filter.is_absent(createKey<key_size>(s));
         }
 

@@ -75,3 +75,5 @@ private:
     size_t size;
     std::unique_ptr<char[]> data = std::make_unique<char[]>(block_size);
 };
+
+#include "TableBlockSerializer.hpp"

@@ -4,7 +4,6 @@
 #include "StubFilter.hpp"
 #include "TestUtils.hpp"
 #include "index/Index.hpp"
-#include "TableBlockSerializer.hpp"
 
 
 template<typename T>
@@ -18,6 +17,19 @@ void check_optional_not_present(const std::optional<T> &opt) {
     EXPECT_FALSE(opt.has_value());
 }
 
+template<std::size_t key_size>
+using FilterL = StubFilter<key_size>;
+
+template<std::size_t block_size, std::size_t id_bits, std::size_t key_size>
+using FactoryL = TypedRepositoryFactory<TableBlock<block_size, id_bits, key_size>>;
+
+template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
+Index<key_size, hash_size, block_size, id_bits> get_index() {
+    return Index<key_size, hash_size, block_size, id_bits>(std::make_unique<FilterL<key_size>>(),
+                                                           std::make_unique<FactoryL<block_size, id_bits, key_size>>(
+                                                                   RepositoryFactory(".")));
+}
+
 
 TEST(TestIndex, EMPTY) {
     constexpr std::size_t key_size = 4;
@@ -25,10 +37,7 @@ TEST(TestIndex, EMPTY) {
     constexpr std::size_t block_size = 4096;
     constexpr std::size_t id_bits = 8;
 
-    StubFilter<key_size> filter;
-    TypedRepositoryFactory<TableBlock<block_size, id_bits, key_size>> factory(RepositoryFactory("."));
-
-    Index<key_size, hash_size, block_size, id_bits> index(filter, factory);
+    auto index = get_index<key_size, hash_size, block_size, id_bits>();
 
     EXPECT_EQ(std::nullopt, index.get(createKey<key_size>("AAAA")));
     EXPECT_EQ(std::nullopt, index.get(createKey<key_size>("BBBB")));
@@ -40,10 +49,7 @@ TEST(TestIndex, APPLY_WITH_EMPTY) {
     constexpr std::size_t block_size = 4096;
     constexpr std::size_t id_bits = 8;
 
-    StubFilter<key_size> filter;
-    TypedRepositoryFactory<TableBlock<block_size, id_bits, key_size>> factory(RepositoryFactory("."));
-
-    Index<key_size, hash_size, block_size, id_bits> index(filter, factory);
+    auto index = get_index<key_size, hash_size, block_size, id_bits>();
 
     Log<10, key_size, id_bits> log{};
     Key<4> key1 = createKey<key_size>("abcd");
@@ -71,10 +77,7 @@ TEST(TestIndex, APPLY_WITH_NON_EMPTY) {
     constexpr std::size_t block_size = 4096;
     constexpr std::size_t id_bits = 8;
 
-    StubFilter<key_size> filter;
-    TypedRepositoryFactory<TableBlock<block_size, id_bits, key_size>> factory(RepositoryFactory("."));
-
-    Index<key_size, hash_size, block_size, id_bits> index(filter, factory);
+    auto index = get_index<key_size, hash_size, block_size, id_bits>();
 
     Log<10, key_size, id_bits> log{};
     Key<4> key1 = createKey<key_size>("abcd");
@@ -109,13 +112,10 @@ TEST(TestIndex, APPLY_WITH_NON_EMPTY) {
 TEST(TestIndex, APPLY_WITH_LITTLE_BLOCK_SIZE) {
     constexpr std::size_t key_size = 4;
     constexpr std::size_t hash_size = 3;
-    constexpr std::size_t block_size = 16;
+    constexpr std::size_t block_size = 4096;
     constexpr std::size_t id_bits = 8;
 
-    StubFilter<key_size> filter;
-    TypedRepositoryFactory<TableBlock<block_size, id_bits, key_size>> factory(RepositoryFactory("."));
-
-    Index<key_size, hash_size, block_size, id_bits> index(filter, factory);
+    auto index = get_index<key_size, hash_size, block_size, id_bits>();
 
     Log<200, key_size, id_bits> log{};
     std::vector<Key<key_size>> keys;

@@ -6,10 +6,16 @@
 #include "KeyValue.hpp"
 #include "Log.hpp"
 #include "index/Index.hpp"
+#include "Storage.hpp"
 
 template<size_t key_size, size_t value_size, size_t total_count>
 class KeyValueStore {
 private:
+
+    constexpr static unsigned int closest_div8(unsigned int a) {
+        return 8 * div_ceil(a, 8);
+    }
+
     constexpr static unsigned int div_ceil(unsigned int a, unsigned int b) {
         return (a + b - 1) / b;
     }
@@ -24,24 +30,42 @@ private:
     constexpr static std::size_t block_size = PAGE_SIZE;
     constexpr static std::size_t key_value_per_block = div_ceil(block_size, key_size + value_size);
     constexpr static std::size_t log_capacity = 0.02 * total_count;
-    constexpr static std::size_t id_bits = log2_ceil(total_count);
+    constexpr static std::size_t id_bits = closest_div8(log2_ceil(total_count));
     constexpr static std::size_t hash_size = div_ceil(log2_ceil(total_count / key_value_per_block), 8);
 
-public:
+private:
     using KeyValueL = KeyValue<key_size, value_size>;
     using KeyL = Key<key_size>;
+    using ValueL = Value<value_size>;
+    using TableBlockL = TableBlock<block_size, id_bits, key_size>;
 
+public:
     explicit KeyValueStore();
 
     void add(const KeyValueL &);
 
-    std::optional<KeyValueL> get(const KeyL &);
+    std::optional<ValueL> get(const KeyL &);
 
     void del(const KeyL &);
 
 private:
-    Log<log_capacity, key_size, id_bits> log;
-    Index<key_size, hash_size, block_size, id_bits> index;
+    std::optional<unsigned int> get_id(const KeyL &);
+    void check_log_size();
+
+private:
+    inline static RepositoryFactory get_factory_for_values() {
+        return RepositoryFactory(".dss/values");
+    }
+
+    inline static RepositoryFactory get_factory_for_table_blocks() {
+        return RepositoryFactory(".dss/index");
+    }
+
+
+private:
+    Storage<ValueL, total_count> storage_m;
+    Log<log_capacity, key_size, id_bits> log_m;
+    Index<key_size, hash_size, block_size, id_bits> index_m;
 };
 
 #include "KeyValueStoreImpl.hpp"

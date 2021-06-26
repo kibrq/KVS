@@ -49,9 +49,9 @@ public:
     std::vector<KeyAction<key_size>> summarize() {
         std::vector<KeyAction<key_size>> summary;
         summary.reserve(size_m);
-        for (size_t i = 0; i < size_m; ++i) {
-            Key<key_size> key = KeyArray::get(key_array.get(), i);
-            Id id = IdArray::get(id_array.get(), i);
+        for (size_t i = size_m; i > 0; --i) {
+            Key<key_size> key = KeyArray::get(key_array.get(), i - 1);
+            Id id = IdArray::get(id_array.get(), i - 1);
             if (id == reserved_id) {
                 summary.emplace_back(std::move(key));
             } else {

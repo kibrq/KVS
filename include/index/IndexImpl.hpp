@@ -2,9 +2,9 @@
 #include <algorithm>
 
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
-Index<key_size, hash_size, block_size, id_bits>::Index(Filter<key_size> &filter,
-                                                       TypedRepositoryFactory<TBlock> &factory)
-        : filter_m{filter}, factory_m{factory}, repository_m{factory_m.get()} {
+Index<key_size, hash_size, block_size, id_bits>::Index(std::unique_ptr<Filter<key_size>> &&filter,
+                                                       std::unique_ptr<TypedRepositoryFactory<TBlock>> &&factory)
+        : filter_m{std::move(filter)}, factory_m{std::move(factory)}, repository_m{factory_m->get()} {
     sparse_table_m.emplace_back();
 }
 
@@ -18,7 +18,7 @@ auto Index<key_size, hash_size, block_size, id_bits>::calculate_hash(const Key<k
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
 auto Index<key_size, hash_size, block_size, id_bits>::get(const Key<key_size> &key) -> std::optional<Id> {
 
-    if (filter_m.is_absent(key)) {
+    if (filter_m->is_absent(key)) {
         return std::nullopt;
     }
 
@@ -68,9 +68,9 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
         return compare_keys_by_hash(key1.view_key(), key2.view_key());
     });
 
-    filter_m.clear();
+    filter_m->clear();
 
-    TypedRepository<TBlock> new_repository = factory_m.get();
+    TypedRepository<TBlock> new_repository = factory_m->get();
 
     std::vector<typename TBlock::Entry> current_block;
     current_block.reserve(TBlock::max_size);
@@ -85,7 +85,7 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
     auto log = keyActions.begin(), log_end = keyActions.end();
 
     auto take = [&current_block, this](typename TBlock::Entry &&e) {
-        current_block.push_back(std::move(e)), filter_m.add(current_block.back().key);
+        current_block.push_back(std::move(e)), filter_m->add(current_block.back().key);
     };
 
     auto take_from_index = [take, &index]() {
@@ -93,7 +93,7 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
     };
 
     auto take_from_log = [take, &log]() {
-        take({log->consume_key(), log->id()}), ++log;
+        take({log->consume_key(), static_cast<unsigned int>(log->id())}), ++log;
     };
 
     auto flush_current_block = [this, &current_block, &current_block_index, &new_repository, &new_sparse]() {

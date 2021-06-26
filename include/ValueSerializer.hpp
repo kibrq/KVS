@@ -3,7 +3,6 @@
 #include <cstring>
 #include <memory>
 
-#include "KeyValue.hpp"
 #include "Serializer.hpp"
 
 template<size_t size>
