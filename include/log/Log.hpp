@@ -5,17 +5,17 @@
 #include <memory>
 
 #include "KeyValue.hpp"
-#include "LazyUnalignedIntArray.hpp"
-#include "LazyUnalignedKeyArray.hpp"
-#include "KeyAction.hpp"
-#include "SearchResult.hpp"
+#include "unalignedArray/UnalignedIntArray.hpp"
+#include "unalignedArray/UnalignedKeyArray.hpp"
+#include "util/KeyAction.hpp"
+#include "util/SearchResult.hpp"
 
 template<size_t capacity, size_t key_size, size_t id_bits>
 class Log {
     using IdType = LimitedUnsignedInt<id_bits>;
     using Id = typename IdType::PlainType;
-    using IdArray = LazyUnalignedArray<IdType>;
-    using KeyArray = LazyUnalignedArray<Key<key_size>>;
+    using IdArray = UnalignedArray<IdType>;
+    using KeyArray = UnalignedArray<Key<key_size>>;
 public:
     static constexpr Id reserved_id = IdType::max_value;
 

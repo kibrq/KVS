@@ -4,18 +4,18 @@
 #include <cassert>
 #include <optional>
 
-#include "Serializer.hpp"
+#include "serialization/Serializer.hpp"
 #include "KeyValue.hpp"
-#include "LimitedUnsignedInt.hpp"
-#include "LazyUnalignedIntArray.hpp"
-#include "LazyUnalignedKeyArray.hpp"
+#include "util/LimitedUnsignedInt.hpp"
+#include "unalignedArray/UnalignedIntArray.hpp"
+#include "unalignedArray/UnalignedKeyArray.hpp"
 
 template<size_t block_size, size_t id_bits, size_t key_size>
 class TableBlock {
     using IdType = LimitedUnsignedInt<id_bits>;
     using Id = typename IdType::PlainType;
-    using IdArray = LazyUnalignedArray<IdType>;
-    using KeyArray = LazyUnalignedArray<Key<key_size>>;
+    using IdArray = UnalignedArray<IdType>;
+    using KeyArray = UnalignedArray<Key<key_size>>;
     static_assert(KeyArray::bit_per_value % 8 == 0);
 public:
     static constexpr Id reserved_id = IdType::max_value;
@@ -76,4 +76,4 @@ private:
     std::unique_ptr<char[]> data = std::make_unique<char[]>(block_size);
 };
 
-#include "TableBlockSerializer.hpp"
+#include "serialization/TableBlockSerializer.hpp"

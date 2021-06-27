@@ -1,7 +1,7 @@
 #pragma once
 
 #include "index/BloomFilter.hpp"
-#include "Log.hpp"
+#include "log/Log.hpp"
 #include "index/Index.hpp"
 
 template<std::size_t key_size, std::size_t value_size, std::size_t total_count>

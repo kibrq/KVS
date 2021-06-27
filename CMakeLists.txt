@@ -22,25 +22,35 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
 
 add_executable(KVS
         src/Main.cpp
-        src/RepositoryFactory.cpp
-        src/Repository.cpp
+        src/repositories/RepositoryFactory.cpp
+        src/repositories/Repository.cpp
         include/KeyValue.hpp
         include/KeyValueStore.hpp
-        include/RepositoryFactory.hpp
-        include/Repository.hpp
-        include/Serializer.hpp
-        include/SerializerSized.hpp
-        include/TypedRepository.hpp
-        include/ValueSerializer.hpp
-        include/LazyUnalignedArray.hpp
-        include/LazyUnalignedKeyArray.hpp
-        include/LazyUnalignedIntArray.hpp
-        include/LimitedUnsignedInt.hpp
-        include/TableBlock.hpp
-        include/TableBlockSerializer.hpp
-        include/Storage.hpp
-        include/FreePositionsManager.hpp
-        include/Log.hpp
-        include/KeyAction.hpp
-        include/SearchResult.hpp
-        include/index/Index.hpp include/index/Filter.hpp include/index/IndexImpl.hpp include/TypedRepositoryFactory.hpp include/index/EntryIteratorImpl.hpp include/index/BloomFilter.hpp include/index/BloomFilterImpl.hpp lib/xxhash.h include/util/XXHashWrapper.hpp include/util/XXHashWrapperImpl.hpp include/KeyValueStoreImpl.hpp)
+        include/repositories/RepositoryFactory.hpp
+        include/repositories/Repository.hpp
+        include/serialization/Serializer.hpp
+        include/serialization/SerializerSized.hpp
+        include/repositories/TypedRepository.hpp
+        include/serialization/ValueSerializer.hpp
+        include/unalignedArray/UnalignedArray.hpp
+        include/unalignedArray/UnalignedKeyArray.hpp
+        include/unalignedArray/UnalignedIntArray.hpp
+        include/util/LimitedUnsignedInt.hpp
+        include/index/TableBlock.hpp
+        include/serialization/TableBlockSerializer.hpp
+        include/storage/Storage.hpp
+        include/log/FreePositionsManager.hpp
+        include/log/Log.hpp
+        include/util/KeyAction.hpp
+        include/util/SearchResult.hpp
+        include/index/Index.hpp
+        include/index/Filter.hpp
+        include/index/impl/IndexImpl.hpp
+        include/repositories/TypedRepositoryFactory.hpp
+        include/index/impl/EntryIteratorImpl.hpp
+        include/index/BloomFilter.hpp
+        include/index/impl/BloomFilterImpl.hpp
+        lib/xxhash.h
+        include/xxh/XXHashWrapper.hpp
+        include/xxh/XXHashWrapperImpl.hpp
+        include/impl/KeyValueStoreImpl.hpp)

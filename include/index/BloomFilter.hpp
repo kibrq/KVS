@@ -5,7 +5,7 @@
 #include <functional>
 #include <cmath>
 
-#include "util/XXHashWrapper.hpp"
+#include "xxh/XXHashWrapper.hpp"
 #include "Filter.hpp"
 
 template<std::size_t key_size, std::size_t elements_count, std::size_t bits_per_key>
@@ -57,4 +57,4 @@ private:
     };
 };
 
-#include "BloomFilterImpl.hpp"
+#include "index/impl/BloomFilterImpl.hpp"

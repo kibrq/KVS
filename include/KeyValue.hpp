@@ -46,7 +46,7 @@ private:
     std::unique_ptr<char[]> value;
 };
 
-#include "ValueSerializer.hpp"
+#include "serialization/ValueSerializer.hpp"
 
 template<size_t key_size, size_t value_size>
 class KeyValue {

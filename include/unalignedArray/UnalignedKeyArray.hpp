@@ -5,10 +5,10 @@
 #include <cstddef>
 
 #include "KeyValue.hpp"
-#include "LazyUnalignedArray.hpp"
+#include "UnalignedArray.hpp"
 
 template<size_t key_size>
-class LazyUnalignedArray<Key<key_size>> {
+class UnalignedArray<Key<key_size>> {
 public:
     constexpr static size_t bit_per_value = 8 * key_size;
 

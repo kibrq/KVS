@@ -1,9 +1,9 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "TypedRepository.hpp"
+#include "repositories/TypedRepository.hpp"
 #include "KeyValue.hpp"
-#include "TableBlock.hpp"
+#include "index/TableBlock.hpp"
 #include "TestUtils.hpp"
 
 TEST(TypedRepository, ValuesSimple) {

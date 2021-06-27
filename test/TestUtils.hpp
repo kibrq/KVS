@@ -4,11 +4,11 @@
 #include <memory>
 #include <string>
 
-#include "TypedRepository.hpp"
-#include "RepositoryFactory.hpp"
+#include "repositories/TypedRepository.hpp"
+#include "repositories/RepositoryFactory.hpp"
 #include "KeyValue.hpp"
-#include "TableBlock.hpp"
-#include "SerializerSized.hpp"
+#include "index/TableBlock.hpp"
+#include "serialization/SerializerSized.hpp"
 
 template<size_t size>
 Value<size> createValue(const std::string &value);
@@ -16,7 +16,7 @@ Value<size> createValue(const std::string &value);
 template<size_t size>
 Key<size> createKey(const std::string &value);
 
-template <size_t key_size, size_t value_size>
+template<size_t key_size, size_t value_size>
 KeyValue<key_size, value_size> createRecord(const std::string &key, const std::string &value);
 
 template <std::size_t size>

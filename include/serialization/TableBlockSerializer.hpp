@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Serializer.hpp"
+#include "serialization/Serializer.hpp"
 
 template<size_t block_size, size_t id_bits, size_t key_size>
 class Serializer<TableBlock<block_size, id_bits, key_size>> {

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "SerializerSized.hpp"
+#include "serialization/SerializerSized.hpp"
 #include "RepositoryFactory.hpp"
 #include "TypedRepository.hpp"
 

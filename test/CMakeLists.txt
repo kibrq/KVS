@@ -7,11 +7,18 @@ find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
 add_executable(KVSTest
-        ../src/Repository.cpp ../src/RepositoryFactory.cpp
+        ../src/repositories/Repository.cpp ../src/repositories/RepositoryFactory.cpp
         testAll.cpp
         TestUtils.hpp TestUtilsImpl.hpp
         testLazyUnalignedIntArray.cpp
-        testTypedRepository.cpp testFreePositionsManager.cpp testStorage.cpp testLog.cpp testIndex.cpp StubFilter.hpp testBloomFilter.cpp testE2E.cpp)
+        testTypedRepository.cpp
+        testFreePositionsManager.cpp
+        testStorage.cpp
+        testLog.cpp
+        testIndex.cpp
+        StubFilter.hpp
+        testBloomFilter.cpp
+        testE2E.cpp)
 
 include_directories(${GTEST_INCLUDE_DIRS})
 

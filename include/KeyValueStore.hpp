@@ -4,9 +4,9 @@
 #include <optional>
 
 #include "KeyValue.hpp"
-#include "Log.hpp"
+#include "log/Log.hpp"
 #include "index/Index.hpp"
-#include "Storage.hpp"
+#include "storage/Storage.hpp"
 
 template<size_t key_size, size_t value_size, size_t total_count>
 class KeyValueStore {
@@ -68,4 +68,4 @@ private:
     Index<key_size, hash_size, block_size, id_bits> index_m;
 };
 
-#include "KeyValueStoreImpl.hpp"
+#include "impl/KeyValueStoreImpl.hpp"

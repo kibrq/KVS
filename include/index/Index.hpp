@@ -7,11 +7,11 @@
 
 #include "KeyValue.hpp"
 #include "Filter.hpp"
-#include "TypedRepositoryFactory.hpp"
-#include "TypedRepository.hpp"
-#include "LimitedUnsignedInt.hpp"
+#include "repositories/TypedRepositoryFactory.hpp"
+#include "repositories/TypedRepository.hpp"
+#include "util/LimitedUnsignedInt.hpp"
 #include "TableBlock.hpp"
-#include "KeyAction.hpp"
+#include "util/KeyAction.hpp"
 
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
 class Index {
@@ -68,5 +68,5 @@ private:
 
 };
 
-#include "EntryIteratorImpl.hpp"
-#include "IndexImpl.hpp"
+#include "index/impl/EntryIteratorImpl.hpp"
+#include "index/impl/IndexImpl.hpp"
