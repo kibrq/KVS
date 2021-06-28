@@ -50,15 +50,20 @@ public:
 
 private:
     std::optional<unsigned int> get_id(const KeyL &);
+
     void check_log_size();
 
 private:
     inline static RepositoryFactory get_factory_for_values() {
-        return RepositoryFactory(".dss/values");
+        std::string path(".dss/values");
+        std::filesystem::create_directories(path);
+        return RepositoryFactory(path);
     }
 
     inline static RepositoryFactory get_factory_for_table_blocks() {
-        return RepositoryFactory(".dss/index");
+        std::string path(".dss/index");
+        std::filesystem::create_directories(path);
+        return RepositoryFactory(path);
     }
 
 

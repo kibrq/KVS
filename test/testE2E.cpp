@@ -43,22 +43,54 @@ TEST(E2ETest, SmallLogCapacity) {
     }
 
     for (std::size_t i = 0; i < records_count; ++i) {
-        testOptionalHasValue(store.get(records[0].getKey()), records[1].getValue());
+        testOptionalHasValue(store.get(records[i].getKey()), records[i].getValue());
+    }
+}
+
+TEST(E2ETest, SmallLogWithDel) {
+    KeyValueStore<4, 4, 100> store{};
+    constexpr std::size_t records_count = 5;
+
+    KeyValue<4, 4> records[records_count] = {
+            createRecord<4, 4>("aaa1", "bbb1"),
+            createRecord<4, 4>("aaa2", "bbb2"),
+            createRecord<4, 4>("aaa3", "bbb3"),
+            createRecord<4, 4>("aaa4", "bbb4"),
+            createRecord<4, 4>("aaa5", "bbb5")
+    };
+
+    for (std::size_t i = 0; i < records_count; ++i) {
+        store.add(records[i]);
+    }
+
+    store.del(records[2].getKey());
+    store.del(records[4].getKey());
+
+    testOptionalHasNoValue(store.get(records[4].getKey()));
+    testOptionalHasNoValue(store.get(records[2].getKey()));
+
+    store.add(records[2]);
+    store.add(records[4]);
+
+    for (std::size_t i = 0; i < records_count; ++i) {
+        testOptionalHasValue(store.get(records[i].getKey()), records[i].getValue());
     }
 }
 
 TEST(E2ETest, StressTest) {
     KeyValueStore<2, 16, 5000> store{};
-
     std::unordered_map<std::string, std::string> records;
 
+#if 1
     for (std::size_t i = 0; i < 1000; ++i) {
         std::string key = createRandomString<2>();
         std::string value = createRandomString<16>();
         records[key] = value;
         store.add(createRecord<2, 16>(key, value));
     }
+#endif
 
+#if 1
     for (std::size_t i = 0; i < 5000; ++i) {
         std::string key = createRandomString<2>();
         if (records.find(key) != records.end()) {
@@ -67,6 +99,9 @@ TEST(E2ETest, StressTest) {
             testOptionalHasNoValue(store.get(createKey<2>(key)));
         }
     }
+#endif
+
+#if 0
 
     for (std::size_t i = 0; i < 2000; ++i) {
         std::string key = createRandomString<2>();
@@ -91,6 +126,7 @@ TEST(E2ETest, StressTest) {
             }
         }
     }
+#endif
 
 }
 

@@ -33,9 +33,9 @@ void KeyValueStore<key_size, value_size, total_count>::check_log_size() {
 
 template<std::size_t key_size, std::size_t value_size, std::size_t total_count>
 void KeyValueStore<key_size, value_size, total_count>::add(const KeyValueL &key_value) {
-    std::optional<std::size_t> id = get_id(key_value.getKey());
-    if (id.has_value()) {
-        storage_m.update(id.value(), key_value.getValue());
+    std::optional<std::size_t> result = get_id(key_value.getKey());
+    if (result.has_value()) {
+        storage_m.update(result.value(), key_value.getValue());
     } else {
         log_m.add(key_value.getKey(), storage_m.write(key_value.getValue()));
     }
@@ -50,6 +50,7 @@ void KeyValueStore<key_size, value_size, total_count>::del(const KeyL &key) {
         log_m.remove(key);
         storage_m.remove(id.value());
     }
+    check_log_size();
 }
 
 template<std::size_t key_size, std::size_t value_size, std::size_t total_count>

@@ -18,10 +18,26 @@ TEST(Log, Simple) {
     log.add(key4, 0);
     auto summary = log.summarize();
     ASSERT_EQ(4, summary.size());
-    ASSERT_EQ(1, summary[0].id());
-    ASSERT_EQ(key1, summary[0].consume_key());
+    ASSERT_EQ(0, summary[0].id());
+    ASSERT_EQ(key4, summary[0].consume_key());
     ASSERT_TRUE(summary[1].is_removed());
     ASSERT_TRUE(summary[2].is_removed());
-    ASSERT_EQ(0, summary[3].id());
-    ASSERT_EQ(key4, summary[3].consume_key());
+    ASSERT_EQ(1, summary[3].id());
+    ASSERT_EQ(key1, summary[3].consume_key());
+}
+
+TEST(Log, AddRemove) {
+    Log<10, 4, 32> log{};
+    Key<4> key = createKey<4>("abcd");
+    log.add(key, 1);
+    log.remove(key);
+
+    auto summary1 = log.summarize();
+    ASSERT_EQ(1, summary1.size());
+    EXPECT_EQ(true, summary1[0].is_removed());
+
+    log.add(key, 2);
+    auto summary2 = log.summarize();
+    ASSERT_EQ(1, summary2.size());
+    EXPECT_EQ(key, summary2[0].consume_key());
 }
