@@ -11,15 +11,6 @@
 template<size_t key_size, size_t value_size, size_t total_count>
 class KeyValueStore {
 private:
-
-    constexpr static unsigned int closest_div8(unsigned int a) {
-        return 8 * div_ceil(a, 8);
-    }
-
-    constexpr static unsigned int div_ceil(unsigned int a, unsigned int b) {
-        return (a + b - 1) / b;
-    }
-
     constexpr static unsigned int log2_ceil(unsigned int value) {
         if (value <= 1) {
             return 1;
@@ -28,10 +19,9 @@ private:
     }
 
     constexpr static std::size_t block_size = PAGE_SIZE;
-    constexpr static std::size_t key_value_per_block = div_ceil(block_size, key_size + value_size);
+    constexpr static std::size_t id_bits = log2_ceil(total_count);
     constexpr static std::size_t log_capacity = 0.02 * total_count;
-    constexpr static std::size_t id_bits = closest_div8(log2_ceil(total_count));
-    constexpr static std::size_t hash_size = div_ceil(log2_ceil(total_count / key_value_per_block), 8);
+    constexpr static std::size_t hash_size = std::max((std::size_t) 1, (std::size_t) (id_bits / 8));
 
 private:
     using KeyValueL = KeyValue<key_size, value_size>;

@@ -39,7 +39,7 @@ public:
 private:
     Hash calculate_hash(const Key<key_size> &key);
 
-    bool compare_keys_by_hash(const Key<key_size> &, const Key<key_size> &);
+    int compare_keys_by_hash(const Key<key_size> &, const Key<key_size> &);
 
     struct EntryIterator : std::iterator<std::input_iterator_tag, typename TBlock::Entry> {
         explicit EntryIterator(Index &index, std::size_t block_index, std::size_t in_block);
