@@ -2,8 +2,8 @@
 
 #include <cstddef>
 
-#include "FreePositionsManager.hpp"
-#include "TypedRepository.hpp"
+#include "log/FreePositionsManager.hpp"
+#include "repositories/TypedRepository.hpp"
 
 template<typename T, size_t size>
 class Storage {

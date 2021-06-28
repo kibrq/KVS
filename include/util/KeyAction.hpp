@@ -13,6 +13,10 @@ public:
 
     KeyAction(Key<size> key, size_t id) : key_m{std::move(key)}, id_m{id} {}
 
+    [[nodiscard]] const Key<size> & view_key() const {
+        return key_m;
+    }
+
     [[nodiscard]] Key<size> consume_key() {
         return std::move(key_m);
     }

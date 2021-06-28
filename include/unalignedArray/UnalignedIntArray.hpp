@@ -2,11 +2,11 @@
 
 #include <cstddef>
 
-#include "LazyUnalignedArray.hpp"
-#include "LimitedUnsignedInt.hpp"
+#include "UnalignedArray.hpp"
+#include "util/LimitedUnsignedInt.hpp"
 
 template<size_t bits>
-class LazyUnalignedArray<LimitedUnsignedInt<bits>> {
+class UnalignedArray<LimitedUnsignedInt<bits>> {
 public:
     constexpr static size_t bit_per_value = bits;
 

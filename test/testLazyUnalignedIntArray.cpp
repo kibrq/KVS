@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
-#include "LazyUnalignedIntArray.hpp"
+#include "unalignedArray/UnalignedIntArray.hpp"
 
 template<size_t size>
-using IntArray = LazyUnalignedArray<LimitedUnsignedInt<size>>;
+using IntArray = UnalignedArray<LimitedUnsignedInt<size>>;
 
 TEST(LazyUnalignedIntArray, Simple) {
     char data[3];

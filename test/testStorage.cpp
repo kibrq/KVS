@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-#include "Storage.hpp"
+#include "storage/Storage.hpp"
 #include "TestUtils.hpp"
-#include "ValueSerializer.hpp"
+#include "serialization/ValueSerializer.hpp"
 
 TEST(Storage, ValuesSimple) {
     constexpr size_t value_size = 4;

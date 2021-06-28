@@ -6,7 +6,7 @@ template<typename T>
 class SearchResult {
 private:
     static constexpr bool removed_v = true;
-    static constexpr bool notFound_v = true;
+    static constexpr bool notFound_v = false;
 public:
     static SearchResult found(T val) {
         return SearchResult{std::move(val)};

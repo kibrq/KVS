@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <memory>
 
-#include "SerializerSized.hpp"
+#include "serialization/SerializerSized.hpp"
 #include "Repository.hpp"
 
 template<SerializedSized T>

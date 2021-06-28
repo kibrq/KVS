@@ -1,13 +1,13 @@
 #include <vector>
 
 #include <KeyValue.hpp>
-#include <RepositoryFactory.hpp>
-#include "ValueSerializer.hpp"
-#include "TypedRepository.hpp"
-#include "LazyUnalignedKeyArray.hpp"
-#include "LazyUnalignedIntArray.hpp"
-#include "TableBlock.hpp"
-#include "TableBlockSerializer.hpp"
+#include <repositories/RepositoryFactory.hpp>
+#include "serialization/ValueSerializer.hpp"
+#include "repositories/TypedRepository.hpp"
+#include "unalignedArray/UnalignedKeyArray.hpp"
+#include "unalignedArray/UnalignedIntArray.hpp"
+#include "index/TableBlock.hpp"
+#include "serialization/TableBlockSerializer.hpp"
 
 int main() {
     RepositoryFactory factory{"dev"};
@@ -18,8 +18,8 @@ int main() {
     s.write(0, val);
     s.read(0);
     s.close();
-    LazyUnalignedArray<Key<10>>::get(tmp.get(), 3);
-    LazyUnalignedArray<LimitedUnsignedInt<8u>>::get(tmp.get(), 4);
+    UnalignedArray<Key<10>>::get(tmp.get(), 3);
+    UnalignedArray<LimitedUnsignedInt<8u>>::get(tmp.get(), 4);
     TableBlock<800, 3, 3> block{std::vector<TableBlock<800, 3, 3>::Entry>{}};
     Serializer<TableBlock<800, 3, 3>>::consume(std::move(tmp));
 }

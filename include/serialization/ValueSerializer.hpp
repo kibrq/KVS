@@ -3,8 +3,7 @@
 #include <cstring>
 #include <memory>
 
-#include "KeyValue.hpp"
-#include "Serializer.hpp"
+#include "serialization/Serializer.hpp"
 
 template<size_t size>
 class Serializer<Value<size>> {

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "FreePositionsManager.hpp"
+#include "log/FreePositionsManager.hpp"
 
 TEST(FreePositionsManager, Simple) {
     constexpr size_t size = 128;
