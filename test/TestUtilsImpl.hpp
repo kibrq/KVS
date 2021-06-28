@@ -27,7 +27,7 @@ KeyValue<key_size, value_size> createRecord(const std::string &key, const std::s
 template<std::size_t size>
 std::string createRandomString() {
     auto rand_char = []() {
-        return rand() % 255;
+        return 'a' + (rand() % 26);
     };
     std::string str(size, 0);
     std::generate_n(str.begin(), size, rand_char);
@@ -48,7 +48,7 @@ template <typename T>
 void testOptionalHasValue(const std::optional<T>& opt, const T&value) {
     EXPECT_TRUE(opt.has_value());
     if (opt.has_value()) {
-        EXPECT_EQ(opt.value(), value);
+        EXPECT_TRUE(opt.value() == value);
     }
 }
 

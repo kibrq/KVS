@@ -59,3 +59,43 @@ TEST(TypedRepository, TableBlockSimple) {
     }
     repository.close();
 }
+
+
+TEST(TypedRepository, TableBlockHard) {
+    constexpr size_t block_size = 5;
+    constexpr size_t id_bits = 8;
+    constexpr size_t value_size = 2;
+
+    RepositoryFactory factory(".");
+
+    TypedRepository<TableBlock<block_size, id_bits, value_size>> repository1(factory.get());
+    TypedRepository<TableBlock<block_size, id_bits, value_size>> repository2(factory.get());
+
+    std::vector<TableBlock<block_size, id_bits, value_size>::Entry> values1;
+    values1.emplace_back(createTableBlockEntry<block_size, id_bits, value_size>("aa", 0));
+    repository1.write(0, TableBlock<block_size, id_bits, value_size>(values1));
+
+    std::vector<TableBlock<block_size, id_bits, value_size>::Entry> values2;
+    values2.emplace_back(createTableBlockEntry<block_size, id_bits, value_size>("ba", 1));
+    repository1.write(1, TableBlock<block_size, id_bits, value_size>(values2));
+
+    repository2.close();
+    repository2 = std::move(repository1);
+
+    TableBlock<block_size, id_bits, value_size> block1copy = repository2.read(0);
+    for (const auto &entry : values1) {
+        auto id = block1copy.get(entry.key);
+        ASSERT_TRUE(id.has_value());
+        ASSERT_EQ(entry.id, id.value());
+    }
+
+    TableBlock<block_size, id_bits, value_size> block2copy = repository2.read(1);
+    for (const auto &entry : values2) {
+        auto id = block2copy.get(entry.key);
+        ASSERT_TRUE(id.has_value());
+        ASSERT_EQ(entry.id, id.value());
+    }
+
+    repository2.close();
+}
+

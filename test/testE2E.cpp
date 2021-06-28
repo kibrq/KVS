@@ -78,62 +78,64 @@ TEST(E2ETest, SmallLogWithDel) {
 }
 
 TEST(E2ETest, StressTest) {
-    KeyValueStore<2, 16, 50> store{};
+    constexpr static std::size_t key_size = 2;
+    constexpr static std::size_t value_size = 16;
+    constexpr static std::size_t N = 10000;
+    KeyValueStore<key_size, value_size, N> store{};
     std::unordered_map<std::string, std::string> records;
 
 #if 1
-    for (std::size_t i = 0; i < 21; ++i) {
-        std::string key = createRandomString<2>();
-        std::string value = createRandomString<16>();
+    for (std::size_t i = 0; i < 4500; ++i) {
+        std::string key = createRandomString<key_size>();
+        std::string value = createRandomString<value_size>();
         records[key] = value;
-        store.add(createRecord<2, 16>(key, value));
+        store.add(createRecord<key_size, value_size>(key, value));
     }
 #endif
 
 #if 1
+    // std::size_t i = 0;
     for (auto&[key, value] : records) {
-        testOptionalHasValue(store.get(createKey<2>(key)), createValue<16>(value));
+        //std::cout << (i++) << " " << key << " " << value << '\n';
+        testOptionalHasValue(store.get(createKey<key_size>(key)), createValue<value_size>(value));
     }
 #endif
 
-#if 0
-    for (std::size_t i = 0; i < 5000; ++i) {
-        std::string key = createRandomString<2>();
-        if (records.find(key) != records.end()) {
-            testOptionalHasValue(store.get(createKey<2>(key)), createValue<16>(records[key]));
+#if 1
+    for (std::size_t i = 0; i < 10000; ++i) {
+        std::string key = createRandomString<key_size>();
+        if (records.contains(key)) {
+            testOptionalHasValue(store.get(createKey<key_size>(key)), createValue<value_size>(records[key]));
         } else {
-            testOptionalHasNoValue(store.get(createKey<2>(key)));
+            testOptionalHasNoValue(store.get(createKey<key_size>(key)));
         }
     }
 #endif
 
-#if 0
-
-    for (std::size_t i = 0; i < 2000; ++i) {
-        std::string key = createRandomString<2>();
-        switch(rand() % 3) {
+#if 1
+    for (std::size_t i = 0; i < 5000; ++i) {
+        std::string key = createRandomString<key_size>();
+        switch ((rand() % 3)) {
             case 0: {
-                records[key] = createRandomString<16>();
-                store.add(createRecord<2, 16>(key, records[key]));
+                store.del(createKey<key_size>(key));
+                records.erase(key);
                 break;
             }
             case 1: {
-                records.erase(key);
-                store.del(createKey<2>(key));
+                std::string value = createRandomString<value_size>();
+                store.add(createRecord<key_size, value_size>(key, value));
+                records[key] = value;
                 break;
             }
-            default: {
-                if (records.find(key) != records.end()) {
-                    testOptionalHasValue(store.get(createKey<2>(key)), createValue<16>(records[key]));
+            case 2: {
+                if (records.contains(key)) {
+                    testOptionalHasValue(store.get(createKey<key_size>(key)), createValue<value_size>(records[key]));
                 } else {
-                    testOptionalHasNoValue(store.get(createKey<2>(key)));
+                    testOptionalHasNoValue(store.get(createKey<key_size>(key)));
                 }
                 break;
             }
         }
     }
 #endif
-
 }
-
-

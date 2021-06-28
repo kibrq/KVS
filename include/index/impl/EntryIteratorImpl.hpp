@@ -14,6 +14,9 @@ Index<key_size, hash_size, block_size, id_bits>::EntryIterator::EntryIterator(In
 
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
 void Index<key_size, hash_size, block_size, id_bits>::EntryIterator::load_block() {
+    if (block_index_m >= index_m.sparse_table_m.size() - 1)
+        return;
+
     current_block_m = index_m.repository_m.read(block_index_m).to_vector();
 
     auto compare_entries_by_hash = [this](const typename TBlock::Entry &e1, const typename TBlock::Entry &e2) {
