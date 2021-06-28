@@ -27,7 +27,7 @@ private:
         return 1 + log2_ceil(value / 2);
     }
 
-    constexpr static std::size_t block_size = PAGE_SIZE;
+    constexpr static std::size_t block_size = 64;
     constexpr static std::size_t key_value_per_block = div_ceil(block_size, key_size + value_size);
     constexpr static std::size_t log_capacity = 0.02 * total_count;
     constexpr static std::size_t id_bits = closest_div8(log2_ceil(total_count));

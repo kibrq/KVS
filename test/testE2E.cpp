@@ -78,11 +78,11 @@ TEST(E2ETest, SmallLogWithDel) {
 }
 
 TEST(E2ETest, StressTest) {
-    KeyValueStore<2, 16, 5000> store{};
+    KeyValueStore<2, 16, 50> store{};
     std::unordered_map<std::string, std::string> records;
 
 #if 1
-    for (std::size_t i = 0; i < 1000; ++i) {
+    for (std::size_t i = 0; i < 21; ++i) {
         std::string key = createRandomString<2>();
         std::string value = createRandomString<16>();
         records[key] = value;
@@ -91,6 +91,12 @@ TEST(E2ETest, StressTest) {
 #endif
 
 #if 1
+    for (auto&[key, value] : records) {
+        testOptionalHasValue(store.get(createKey<2>(key)), createValue<16>(value));
+    }
+#endif
+
+#if 0
     for (std::size_t i = 0; i < 5000; ++i) {
         std::string key = createRandomString<2>();
         if (records.find(key) != records.end()) {

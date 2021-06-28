@@ -5,6 +5,7 @@
 #include "TestUtils.hpp"
 #include "index/Index.hpp"
 
+#include <iostream>
 
 template<typename T>
 void check_optional_present(const std::optional<T> &opt, const T &val) {
@@ -110,25 +111,41 @@ TEST(TestIndex, APPLY_WITH_NON_EMPTY) {
 }
 
 TEST(TestIndex, APPLY_WITH_LITTLE_BLOCK_SIZE) {
-    constexpr std::size_t key_size = 4;
-    constexpr std::size_t hash_size = 3;
-    constexpr std::size_t block_size = 4096;
+    constexpr std::size_t key_size = 2;
+    constexpr std::size_t hash_size = 1;
+    constexpr std::size_t block_size = 5;
     constexpr std::size_t id_bits = 8;
+
+    std::cout << TableBlock<block_size, id_bits, key_size>::max_size << '\n';
 
     auto index = get_index<key_size, hash_size, block_size, id_bits>();
 
+    Key<2> keys[] = {
+            createKey<2>("aa"),
+            createKey<2>("ba"),
+            createKey<2>("ca"),
+            createKey<2>("da"),
+            createKey<2>("ea"),
+            createKey<2>("fa")
+    };
+
     Log<200, key_size, id_bits> log{};
-    std::vector<Key<key_size>> keys;
-    for (int i = 0; i < 100; ++i) {
-        keys.push_back(createKey<key_size>(std::to_string(i) + "aaa"));
-        log.add(keys.back(), i);
-    }
+    log.add(keys[0], 0);
+    log.add(keys[1], 1);
 
     index.apply(log.summarize());
 
-    for (int i = 0; i < 100; ++i) {
-        check_optional_present<unsigned int>(index.get(keys[i]), i);
-    }
-    check_optional_not_present<unsigned int>(index.get(createKey<key_size>("abcd")));
+    log = Log<200, key_size, id_bits>{};
+    log.add(keys[2], 2);
+    log.add(keys[3], 3);
+    index.apply(log.summarize());
 
+    log = Log<200, key_size, id_bits>{};
+    log.add(keys[4], 4);
+    log.add(keys[5], 5);
+    index.apply(log.summarize());
+
+    for (unsigned int i = 0; i < 6; ++i) {
+        testOptionalHasValue(index.get(keys[i]), i);
+    }
 }

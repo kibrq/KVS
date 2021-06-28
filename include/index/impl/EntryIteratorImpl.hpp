@@ -14,10 +14,10 @@ Index<key_size, hash_size, block_size, id_bits>::EntryIterator::EntryIterator(In
 
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
 void Index<key_size, hash_size, block_size, id_bits>::EntryIterator::load_block() {
-    current_block_m = std::move(index_m.repository_m.read(block_index_m).to_vector());
+    current_block_m = index_m.repository_m.read(block_index_m).to_vector();
 
     auto compare_entries_by_hash = [this](const typename TBlock::Entry &e1, const typename TBlock::Entry &e2) {
-        return index_m.compare_keys_by_hash(e1.key, e2.key);
+        return index_m.compare_keys_by_hash(e1.key, e2.key) < 0;
     };
     std::sort(current_block_m.begin(), current_block_m.end(), compare_entries_by_hash);
 

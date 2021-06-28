@@ -55,9 +55,13 @@ auto Index<key_size, hash_size, block_size, id_bits>::get(const Key<key_size> &k
 }
 
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
-bool Index<key_size, hash_size, block_size, id_bits>::compare_keys_by_hash(const Key<key_size> &key1,
-                                                                           const Key<key_size> &key2) {
-    return calculate_hash(key1) < calculate_hash(key2);
+int Index<key_size, hash_size, block_size, id_bits>::compare_keys_by_hash(const Key<key_size> &key1,
+                                                                          const Key<key_size> &key2) {
+    int compare_result = calculate_hash(key1).compare(calculate_hash(key2));
+    if (compare_result != 0) {
+        return compare_result;
+    }
+    return strncmp(key1.getKey(), key2.getKey(), key_size);
 }
 
 template<std::size_t key_size, std::size_t hash_size, std::size_t block_size, std::size_t id_bits>
@@ -65,7 +69,7 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
 
     std::sort(keyActions.begin(), keyActions.end(), [this](const KeyAction<key_size> &key1,
                                                            const KeyAction<key_size> &key2) {
-        return compare_keys_by_hash(key1.view_key(), key2.view_key());
+        return compare_keys_by_hash(key1.view_key(), key2.view_key()) < 0;
     });
 
     filter_m->clear();
@@ -93,7 +97,9 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
     };
 
     auto take_from_log = [take, &log]() {
-        take({log->consume_key(), static_cast<unsigned int>(log->id())}), ++log;
+        if (!log->is_removed())
+            take({log->consume_key(), static_cast<unsigned int>(log->id())});
+        ++log;
     };
 
     auto flush_current_block = [this, &current_block, &current_block_index, &new_repository, &new_sparse]() {
@@ -108,26 +114,44 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
         }
     };
 
+    std::string previous_hash;
+
     while (index != index_end && log != log_end) {
+        auto index_hash = calculate_hash(index->key);
+        auto log_hash = calculate_hash(log->view_key());
+        int compare_hash_result = index_hash.compare(log_hash);
+        int compare_view_result = strncmp(index->key.getKey(), log->view_key().getKey(), key_size);
 
-        // Если ключи совпали, то делаем выбор в пользу log
-        if (index->key == log->view_key()) {
-            if (!log->is_removed()) {
-                take_from_log(), ++index;
+        if (compare_hash_result == 0 && previous_hash.compare(log_hash) != 0 && !current_block.empty()) {
+            flush_current_block();
+        }
+
+        previous_hash = index_hash;
+
+        if (compare_hash_result != 0) {
+            if (compare_hash_result < 0) {
+                take_from_index();
             } else {
-                ++log, ++index;
+                take_from_log();
             }
-            continue;
+            goto check;
         }
 
-        if (compare_keys_by_hash(index->key, log->view_key())) {
-            take_from_index();
-        } else if (!log->is_removed()) {
-            take_from_log();
-        } else {
-            ++log;
+        if (compare_view_result != 0) {
+            if (compare_view_result < 0) {
+                take_from_index();
+            } else {
+                take_from_log();
+            }
+            goto check;
         }
 
+        // compare_view_result == 0 && compare_hash_result == 0
+        take_from_log(), ++index;
+        goto check;
+
+
+        check:
         check_current_block();
     }
 
@@ -137,10 +161,6 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
     }
 
     while (log != log_end) {
-        if (log->is_removed()) {
-            ++log;
-            continue;
-        }
         take_from_log();
         check_current_block();
     }
@@ -152,4 +172,5 @@ void Index<key_size, hash_size, block_size, id_bits>::apply(std::vector<KeyActio
 
     repository_m.close();
     repository_m = std::move(new_repository);
+
 }

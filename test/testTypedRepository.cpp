@@ -26,7 +26,7 @@ TEST(TypedRepository, ValuesSimple) {
 
 TEST(TypedRepository, TableBlockSimple) {
     constexpr size_t block_size = 4096;
-    constexpr size_t id_bits = 8;
+    constexpr size_t id_bits = 9;
     constexpr size_t value_size = 4;
     TypedRepository<TableBlock<block_size, id_bits, value_size>> repository = createTypedRepository<TableBlock<block_size, id_bits, value_size>>();
     std::vector<TableBlock<block_size, id_bits, value_size>::Entry> values1;
